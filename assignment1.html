@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="Style.css">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.js"></script>
+  <title>Assignment 1</title>
+</head>
+<script
+      type="module"
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"
+    ></script>
+</head>
+
+<header class="header">
+      <a href="index.html">
+        <img class="logo" src="images/logo.png" alt="portfolio logo" />
+      </a>
+
+      <nav class="main-nav">
+        <ul class="main-nav-list">
+          <li><a class="main-nav-link" href="index.html">Home</a></li>
+          <li><a class="main-nav-link" href="portfolio.html">Portfolio</a></li>
+          <li><a class="main-nav-link" href="about.html">About</a></li>
+          <li><a class="main-nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+<body>
+  <h1>Lost And Found</h1>
+  <div id="sketch-container"></div>
+
+
+
+    <script>
+    
+function setup() {
+   let canvas = createCanvas(600, 400);
+  canvas.parent('sketch-container')
+}
+
+function draw() {
+  background(170, 235, 250); // sky//
+
+  // platform//
+  push();
+  noStroke();
+  fill(89, 69, 16);
+  rect(0, 350, 600, 50);
+  pop();
+
+  // SUN with 3 independent circles//
+  noStroke();
+  blendMode(ADD);
+
+  push();
+  fill(234, 242, 141, 60);   // very light, transparent
+  circle(200, 100, 110);
+  pop();
+
+  push();
+  fill(234, 242, 141, 120);  // medium brightness
+  circle(200, 100, 80);
+  pop();
+
+  push();
+  fill(234, 242, 141, 200);  // strong
+  circle(200, 100, 50);
+  pop();
+
+  blendMode(BLEND); 
+
+  // first skyscraper 
+  push();
+  fill(180, 180, 180);
+  rect(50, 130, 30, 90);
+  fill(120, 120,120);
+  rect(50, 125, 30, 10);
+  fill(200, 200, 200);
+  rect(53, 140, 15, 5);
+  rect(53, 155, 15, 5);
+  rect(53, 170, 15, 5);
+  rect(53, 185, 15, 5);
+  pop();
+  
+  // second skyscraper 
+  push();
+  fill(180, 180, 180);
+  rect(90, 120, 15, 60);
+  fill(120,120,120);
+  rect(90, 115, 15, 5);
+  fill(200,200,200);
+  rect(92, 130, 11, 3);
+  rect(92, 140, 11, 3);
+  rect(92, 150, 11, 3);
+  rect(92, 160, 11, 3);
+  pop();
+  
+  // skyscraper 3
+  push();
+  fill(180, 180, 180); 
+  rect(260, 130, 25, 100);
+  fill(120, 120, 120); 
+  rect(260, 120, 25, 10);
+  fill(220, 220, 220); 
+  rect(263, 140, 18, 5);
+  rect(263, 155, 18, 5);
+  rect(263, 170, 18, 5);
+  rect(263, 185, 18, 5);
+  rect(263, 200, 18, 5);
+  pop();
+  
+  // skyscraper 4
+  push();
+  fill(180, 180, 180); 
+  rect(300, 100, 25, 100);
+  fill(120, 120, 120); 
+  rect(300, 90, 25, 10);
+  fill(220, 220, 220); 
+  rect(305, 130, 18, 5);
+  rect(305, 140, 18, 5);
+  rect(305, 150, 18, 5);
+  rect(305, 160, 18, 5);
+  rect(305, 170, 18, 5);
+  pop();
+
+  // tree (right side) 
+  push();
+  fill(101, 67, 33); 
+  rect(400, 120, 15, 40);
+  fill(34, 139, 34); 
+  ellipse(410, 110, 40, 40);
+  pop();
+  
+  // river pieces
+  push();
+  noStroke();
+  fill(150, 152, 255, 60);
+  rect(0,300, 600, 20);
+  pop();
+
+  push();
+  noStroke();
+  fill(93, 126, 217);
+  rect(0,320,600, 20);
+  pop();
+
+  push();
+  noStroke();
+  fill(63, 92,171);
+  rect(0,335,600, 20);
+  pop();
+
+  //reflections on river//
+  push();
+  blendMode(ADD);
+  stroke(255, 220, 150, 120);
+  strokeWeight(2);
+  for (let i = 0; i < 12; i++) {
+    let rx = 200 + random(-15, 15); 
+    let ry = random(305, 345);
+    line(rx - 8, ry, rx + 8, ry);
+  }
+  noStroke();
+  blendMode(BLEND);
+  pop();
+
+  //  station sign 
+  push();
+  translate(500, 340);
+  rotate(radians(-12));
+
+  // pole
+  noStroke();
+  fill(55, 65, 80);
+  rect(-5, -60, 10, 70);
+
+  // sign board
+  fill(230, 240, 255);
+  rect(-70, -110, 140, 50, 6);
+
+  // translucent header bar
+  blendMode(MULTIPLY);
+  fill(255, 190, 80, 200);
+  rect(-70, -110, 140, 16, 6, 6, 0, 0);
+  blendMode(BLEND);
+
+  pop();
+}
+
+
+</script>
+
+<p>
+    <a href="index.html"> back to homepage</a>
+  </p>
+<footer class="footer">
+      <div class="container grid grid--footer">
+        <div class="logo-col">
+          <a href="index.html">
+            <img class="logo" src="images/logo.png" alt="logo" />
+          </a>
+
+          <ul class="social-links">
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-instagram"></ion-icon
+              ></a>
+            </li>
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-facebook"></ion-icon
+              ></a>
+            </li>
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-twitter"></ion-icon
+              ></a>
+            </li>
+          </ul>
+
+          <p class="copyright">
+            © 2025 My Portfolio. All rights reserved.
+          </p>
+        </div>
+
+        <div class="address-col">
+          <p><strong>Contact</strong></p>
+          <p>New York, NY</p>
+          <p>
+            Email: <a href="mailto:info@myportfolio.com">info@myportfolio.com</a
+            ><br />
+            Tel: <a href="tel:+16464446464">(646) 444-6464</a>
+          </p>
+        </div>
+
+        <div class="open-hours">
+          <p><strong>Availability</strong></p>
+          <ul>
+            <li>Mon–Fri: 9:00am–6:00pm</li>
+            <li>Sat: By appointment</li>
+            <li>Sun: Closed</li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+</body>
+</html>

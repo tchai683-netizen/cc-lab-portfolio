@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="Style.css">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.js"></script>
+  <title>Assignment 6 </title>
+</head>
+<script
+      type="module"
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"
+    ></script>
+</head>
+
+<header class="header">
+      <a href="index.html">
+        <img class="logo" src="images/logo.png" alt="portfolio logo" />
+      </a>
+
+      <nav class="main-nav">
+        <ul class="main-nav-list">
+          <li><a class="main-nav-link" href="index.html">Home</a></li>
+          <li><a class="main-nav-link" href="portfolio.html">Portfolio</a></li>
+          <li><a class="main-nav-link" href="about.html">About</a></li>
+          <li><a class="main-nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+<body>
+  <h1>Data Portrait</h1>
+  <div id="sketch-container"></div>
+
+
+
+    <script>
+
+     
+
+let days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+// Morning call times and minutes
+let morningTime = [8.3, 7.0, 8.5, 8.3, 8.5, 9.5, 9.8];
+let morningMins = [10, 5, 20, 40, 10, 20, 15];
+
+// Afternoon call times and minutes
+let afternoonTime = [13.5, 11.5, 13.0, 13.8, 14.0, 13.2, 15.0];
+let afternoonMins = [40, 20, 20, 30, 60, 25, 90];
+
+let showMode = 0; 
+
+function setup() {
+  let canvas = createCanvas(600, 600);
+  canvas.parent('sketch-container')
+  rectMode(CENTER);
+  noStroke();
+}
+
+function draw() {
+  background(240);
+
+  // axes
+  stroke(0);
+  line(50, 350, 550, 350); // x axis
+  line(50, 50, 50, 350);   // y axis
+
+  // labels
+  noStroke();
+  fill(0);
+  textSize(12);
+  textAlign(CENTER);
+  for (let i = 0; i < days.length; i++) {
+    let x = map(i, 0, 6, 80, 520);
+    text(days[i], x, 370);
+  }
+
+  textAlign(RIGHT, CENTER);
+  for (let t = 6; t <= 18; t += 3) {
+    let y = map(t, 18, 6, 350, 50);
+    text(t + ":00", 45, y);
+  }
+
+  // draw morning circles (gray)
+  if (showMode === 0 || showMode === 1) {
+    fill(80);
+    noStroke();
+    for (let i = 0; i < days.length; i++) {
+      let x = map(i, 0, 6, 80, 520);
+      let y = map(morningTime[i], 18, 6, 350, 50);
+      let r = map(morningMins[i], 0, 90, 5, 30);
+      ellipse(x, y, r, r);
+    }
+  }
+
+  // draw afternoon circles (green)
+  if (showMode === 0 || showMode === 2) {
+    fill(80, 150, 80);
+    noStroke();
+    for (let i = 0; i < days.length; i++) {
+      let x = map(i, 0, 6, 80, 520);
+      let y = map(afternoonTime[i], 18, 6, 350, 50);
+      let r = map(afternoonMins[i], 0, 90, 5, 30);
+      ellipse(x, y, r, r);
+    }
+  }
+
+  // title and mode
+  fill(0);
+  textAlign(LEFT);
+  textSize(14);
+  text("Daily Calls with My Kids (7 days)", 60, 30);
+
+  textSize(12);
+  let modeText = (showMode === 0) ? "Click: both → morning → afternoon → both" :
+                  (showMode === 1) ? "Showing: morning only" : "Showing: afternoon only";
+  text(modeText, 60, 50);
+}
+
+function mousePressed() {
+ if (showMode == 0) {
+  showMode = 1;   // first click: show morning only
+} else if (showMode == 1) {
+  showMode = 2;   // second click: show afternoon only
+} else {
+  showMode = 0;   // third click: show both again
+}
+}  
+</script>
+
+<p>
+    <a href="index.html"> back to homepage</a>
+  </p>
+<footer class="footer">
+      <div class="container grid grid--footer">
+        <div class="logo-col">
+          <a href="index.html">
+            <img class="logo" src="images/logo.png" alt="logo" />
+          </a>
+
+          <ul class="social-links">
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-instagram"></ion-icon
+              ></a>
+            </li>
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-facebook"></ion-icon
+              ></a>
+            </li>
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-twitter"></ion-icon
+              ></a>
+            </li>
+          </ul>
+
+          <p class="copyright">
+            © 2025 My Portfolio. All rights reserved.
+          </p>
+        </div>
+
+        <div class="address-col">
+          <p><strong>Contact</strong></p>
+          <p>New York, NY</p>
+          <p>
+            Email: <a href="mailto:info@myportfolio.com">info@myportfolio.com</a
+            ><br />
+            Tel: <a href="tel:+16464446464">(646) 444-6464</a>
+          </p>
+        </div>
+
+        <div class="open-hours">
+          <p><strong>Availability</strong></p>
+          <ul>
+            <li>Mon–Fri: 9:00am–6:00pm</li>
+            <li>Sat: By appointment</li>
+            <li>Sun: Closed</li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+</body>
+</html>

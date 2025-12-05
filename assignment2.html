@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="Style.css">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.js"></script>
+  <title>Assignment 2</title>
+</head>
+<script
+      type="module"
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"
+    ></script>
+</head>
+
+<header class="header">
+      <a href="index.html">
+        <img class="logo" src="images/logo.png" alt="portfolio logo" />
+      </a>
+
+      <nav class="main-nav">
+        <ul class="main-nav-list">
+          <li><a class="main-nav-link" href="index.html">Home</a></li>
+          <li><a class="main-nav-link" href="portfolio.html">Portfolio</a></li>
+          <li><a class="main-nav-link" href="about.html">About</a></li>
+          <li><a class="main-nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+<body>
+  <h1>face Generator</h1>
+  <div id="sketch-container"></div>
+
+
+
+    <script>
+    
+
+
+
+
+// defined variables (will randomize on click)
+
+let eyeSep;     // how far eyes are from the center (x)
+let mouthW;     // mouth width
+let mouthH;     // mouth height
+let corner;     // rectangle corner radius
+let mouthToggle = 0; // 0 = smile (arc), 1 = O-mouth (ellipse) 
+
+function setup() {
+   let canvas = createCanvas(400, 400);
+  canvas.parent('sketch-container')
+  randomizeParams();
+}
+
+function draw() {
+  background(255);
+
+  // scale from mouseX (small 0.2x -> big 2x)
+  let s = map(mouseX, 0, width, 0.2, 2.0, true);
+
+  // eye size from mouseY (small -> big)
+  let eyeSize = map(mouseY, 0, height, 3, 30, true);
+
+  // rotation from mouseX (0° -> 45°)
+  let angle = map(mouseX, 0, width, 0, 45, true);
+
+  // color: blend from BLUE to YELLOW as s grows, make a 0..1 blend factor from the scale range
+  
+  let t = map(s, 0.2, 2.0, 0, 1, true);
+  let blueCol   = color(180, 210, 255);
+  let yellowCol = color(255, 230,   0);
+  let faceCol   = lerpColor(blueCol, yellowCol, t);
+
+  // center, scale, rotate
+  translate(width / 2, height / 2);
+  scale(s);
+  rotate(radians(angle));
+
+  // face rectangle
+  rectMode(CENTER);
+  noStroke();
+  fill(faceCol);
+  rect(0, 0, 120, 120, corner);
+
+  // eyes
+  fill(0);
+  ellipse(-eyeSep, -20, eyeSize, eyeSize);
+  ellipse( eyeSep, -20, eyeSize, eyeSize);
+
+  // when mouthToggle = 0 => smile visible; =1 => O-mouth visible
+  let aSmile = (1 - mouthToggle) * 255; // 255 or 0
+  let aO     = mouthToggle * 255;       // 0 or 255
+
+  // smile (arc) with alpha
+  noFill();
+  stroke(0, aSmile);
+  strokeWeight(2);
+  arc(0, 20, mouthW, mouthH, 0, PI);
+
+  // surprised O (ellipse) with alpha
+  noStroke();
+  fill(0, aO);
+  ellipse(0, 20, mouthH * 0.7, mouthH);
+}
+
+// toggle mouth + randomize on click
+function mousePressed() {
+  mouthToggle = (mouthToggle + 1) % 2;
+  randomizeParams();
+}
+
+// pick new values within min/max ranges (uses random)
+function randomizeParams() {
+  eyeSep = random(18, 50);
+  mouthW = random(40, 90);
+  mouthH = random(12, 36);
+  corner = random(8, 28);
+}
+
+
+
+</script>
+<p>
+    <a href="index.html"> back to homepage</a>
+  </p>
+
+  <footer class="footer">
+      <div class="container grid grid--footer">
+        <div class="logo-col">
+          <a href="index.html">
+            <img class="logo" src="images/logo.png" alt="logo" />
+          </a>
+
+          <ul class="social-links">
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-instagram"></ion-icon
+              ></a>
+            </li>
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-facebook"></ion-icon
+              ></a>
+            </li>
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-twitter"></ion-icon
+              ></a>
+            </li>
+          </ul>
+
+          <p class="copyright">
+            © 2025 My Portfolio. All rights reserved.
+          </p>
+        </div>
+
+        <div class="address-col">
+          <p><strong>Contact</strong></p>
+          <p>New York, NY</p>
+          <p>
+            Email: <a href="mailto:info@myportfolio.com">info@myportfolio.com</a
+            ><br />
+            Tel: <a href="tel:+16464446464">(646) 444-6464</a>
+          </p>
+        </div>
+
+        <div class="open-hours">
+          <p><strong>Availability</strong></p>
+          <ul>
+            <li>Mon–Fri: 9:00am–6:00pm</li>
+            <li>Sat: By appointment</li>
+            <li>Sun: Closed</li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+</body>
+</html>

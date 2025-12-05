@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="Style.css">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.js"></script>
+  <title>Assignment 3</title>
+</head>
+<script
+      type="module"
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"
+    ></script>
+</head>
+
+<header class="header">
+      <a href="index.html">
+        <img class="logo" src="images/logo.png" alt="portfolio logo" />
+      </a>
+
+      <nav class="main-nav">
+        <ul class="main-nav-list">
+          <li><a class="main-nav-link" href="index.html">Home</a></li>
+          <li><a class="main-nav-link" href="portfolio.html">Portfolio</a></li>
+          <li><a class="main-nav-link" href="about.html">About</a></li>
+          <li><a class="main-nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+<body>
+  <h1>Experimental clock</h1>
+  <div id="sketch-container"></div>
+
+
+
+    <script>
+   // SUN–OCEAN CLOCK
+// Press 'R' to toggle between Demo (60s per day) and Real 24h mode
+
+//CONSTANTS
+const W = 600, H = 600;          // Canvas size 
+const HORIZON = 0.62 * H;        // Horizon lin,  62% down the canvas
+const R = 230;                   // Radius of the sun’s circular path 
+const SUN_R = 60;                // Sun’s visual radius
+const DEMO_SECONDS = 60;         // 1 full cycle = 60 seconds
+
+
+// VARIABLES 
+let useRealTime = false;         // Boolean: false=demo, true=real time 
+let stars = [];                  // Array to store star objects
+
+function setup() {
+   let canvas = createCanvas(W, H);
+  canvas.parent('sketch-container')        
+  noStroke();                    
+
+  // Generate 120 stars with random positions and properties
+  for (let i = 0; i < 120; i++) {
+    stars.push({
+      x: random(width),          // random horizontal position (0–600)
+      y: random(0, HORIZON - 200), // keep stars in upper sky 
+      a: random(120, 220),       // brightness (alpha)
+      tw: random(0.006, 0.02),   // twinkle speed (slow → fast)
+      ph: random(TWO_PI)         // phase offset so stars don’t blink 
+    });
+  }
+}
+
+function draw() {
+  // CALCULATE DAY PROGRESS (p between 0 and 1) 
+ let p;
+
+if (useRealTime) {
+  // Real 24h: current time in seconds / total seconds in a day
+  p = (hour()*3600 + minute()*60 + second()) / 86400.0;
+} else {
+  // Demo: millis since start → seconds → loop in DEMO_SECONDS
+  p = ((millis() / 1000) % DEMO_SECONDS) / DEMO_SECONDS;
+}
+
+  //  SUN POSITION ON CIRCLE 
+  const ang = TWO_PI * p - PI;        // Convert progress to angle (rotate by -PI so sunrise starts left)
+  const sunX = width/2 + R * cos(ang); // cos() = x-coordinate of sun on circle
+  const sunY = HORIZON   + R * sin(ang); // sin() = y-coordinate of sun on circle
+  const sunAbove = sunY < HORIZON;    // Boolean: is the sun above the horizon?
+
+  //  SKY COLOR (changes by time of day) 
+  let sky;
+  if (p < 0.10) { // Dawn → Day
+    sky = lerpColor(color(252,210,160), color(85,185,255), map(p, 0.00, 0.10, 0, 1));
+  } else if (p < 0.40) { // Day
+    sky = color(85,185,255);
+  } else if (p < 0.50) { // Day → Dusk
+    sky = lerpColor(color(85,185,255), color(255,170,120), map(p, 0.40, 0.50, 0, 1));
+  } else if (p < 0.85) { // Dusk → Night
+    sky = lerpColor(color(255,170,120), color(14,27,58), map(p, 0.50, 0.85, 0, 1));
+  } else { // Night → Pre-dawn
+    sky = lerpColor(color(14,27,58), color(252,210,160), map(p, 0.85, 1.00, 0, 1));
+  }
+  background(sky); // Fill background with current sky color
+
+  // STARS  visible at night
+  let night = 0;
+  if (p >= 0.50 && p <= 0.85) {
+    night = map(p, 0.50, 0.68, 0, 1) * map(p, 0.85, 0.68, 0, 1);
+  }
+  if (night > 0.02) {
+    for (const s of stars) {
+      const tw = 0.5 + 0.5 * sin(frameCount * s.tw + s.ph); // sine wave makes brightness oscillate
+      fill(255, 255, 255, night * s.a * tw); // opacity = night level × star alpha × twinkle
+      circle(s.x, s.y, 2); // small white circle for each star
+    }
+  }
+
+  // SUN COLOR (changes by time of day)
+  let sunCol;
+  if (p < 0.10) { // Sunrise → Noon
+    sunCol = lerpColor(color(255,185,90), color(255,255,210), map(p, 0.00, 0.10, 0, 1));
+  } else if (p < 0.40) { // Noon
+    sunCol = color(255,255,210);
+  } else if (p < 0.50) { // Noon → Sunset
+    sunCol = lerpColor(color(255,255,210), color(255,145,70), map(p, 0.40, 0.50, 0, 1));
+  } else { // Night / under horizon
+    sunCol = color(180,60,60, 60); // faint, semi-transparent
+  }
+  fill(sunCol);
+  circle(sunX, sunY, SUN_R * 2); // Draw the sun at its (x,y)
+
+  //SEA (rect covers below horizon to "clip" sun)
+  let sea;
+  if (p < 0.40) {
+    sea = color(35,120,200); // Day sea
+  } else if (p < 0.50) {
+    sea = lerpColor(color(35,120,200), color(90,90,160), map(p, 0.40, 0.50, 0, 1)); // Dusk sea
+  } else {
+    sea = color(15,40,70); // Night sea
+  }
+  fill(sea);
+  rect(0, HORIZON, width, height - HORIZON); // Draw water rectangle (covers lower half of sun)
+
+  if (!sunAbove) {
+    // When sun is underwater, add faint red glow
+    fill(180,60,60, 35);
+    circle(sunX, sunY, SUN_R * 2.2);
+  }
+
+  //HUD (helper text)
+  fill(255, 220);
+  textSize(12);
+  textAlign(LEFT, TOP);
+  text(`Sun–Ocean Clock  |  Mode: ${useRealTime ? "Real 24h" : `Demo ${DEMO_SECONDS}s`}  (R=toggle)`, 12, 12);
+}
+
+function keyTyped() {
+  // Pressing R toggles between real-time and demo modes
+  if (key === 'r' || key === 'R') useRealTime = !useRealTime;
+}
+
+
+
+</script>
+
+<p>
+    <a href="index.html"> back to homepage</a>
+  </p>
+
+<footer class="footer">
+      <div class="container grid grid--footer">
+        <div class="logo-col">
+          <a href="index.html">
+            <img class="logo" src="images/logo.png" alt="logo" />
+          </a>
+
+          <ul class="social-links">
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-instagram"></ion-icon
+              ></a>
+            </li>
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-facebook"></ion-icon
+              ></a>
+            </li>
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-twitter"></ion-icon
+              ></a>
+            </li>
+          </ul>
+
+          <p class="copyright">
+            © 2025 My Portfolio. All rights reserved.
+          </p>
+        </div>
+
+        <div class="address-col">
+          <p><strong>Contact</strong></p>
+          <p>New York, NY</p>
+          <p>
+            Email: <a href="mailto:info@myportfolio.com">info@myportfolio.com</a
+            ><br />
+            Tel: <a href="tel:+16464446464">(646) 444-6464</a>
+          </p>
+        </div>
+
+        <div class="open-hours">
+          <p><strong>Availability</strong></p>
+          <ul>
+            <li>Mon–Fri: 9:00am–6:00pm</li>
+            <li>Sat: By appointment</li>
+            <li>Sun: Closed</li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+</body>
+</html>

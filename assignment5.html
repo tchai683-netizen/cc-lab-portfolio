@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="Style.css">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.js"></script>
+  <title>Assignment 5</title>
+</head>
+<script
+      type="module"
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"
+    ></script>
+</head>
+
+<header class="header">
+      <a href="index.html">
+        <img class="logo" src="images/logo.png" alt="portfolio logo" />
+      </a>
+
+      <nav class="main-nav">
+        <ul class="main-nav-list">
+          <li><a class="main-nav-link" href="index.html">Home</a></li>
+          <li><a class="main-nav-link" href="portfolio.html">Portfolio</a></li>
+          <li><a class="main-nav-link" href="about.html">About</a></li>
+          <li><a class="main-nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+<body>
+  <h1>Exquisite Corpse</h1>
+  <div id="sketch-container"></div>
+
+
+
+    <script>
+    
+//Canvas: 600 x 600
+
+let ringCount = 10;        // how many rings
+let ringStep  = 20;        // distance between rings
+let dashW     = 17;        // dash width
+let dashH     = 3;         // dash height
+let baseSpeed = 0.006;      // base rotation speed
+let phase = 0;             // global rotation phase
+
+function setup() {
+  let canvas = createCanvas(600, 600);
+  canvas.parent('sketch-container')
+  rectMode(CENTER);
+  noStroke();
+}
+
+function draw() {
+  background(245);
+  translate(width/2, height/2);
+
+  // Choose direction / speed with a simple conditional
+  // (covered topics only: frameCount, mouseIsPressed, if/else)
+  let speed;
+  if (mouseIsPressed) {
+    // press mouse to reverse & speed up a bit
+    speed = -baseSpeed * 10.2;
+  } else {
+    speed = baseSpeed;
+  }
+  phase += speed;
+
+  // Draw rings (outer to inner)
+  for (let rIndex = 1; rIndex <= ringCount; rIndex++) {
+    let radius = rIndex * ringStep;
+
+    // Alternate orientation per ring for the illusion
+    // Odd rings rotate one way, even rings the other.
+   let ringDir; 
+if (rIndex % 2 == 0) {
+  ringDir = -1;   // even rings rotate the other way
+} else {
+  ringDir = 1;    // odd rings rotate this way
+}
+    // Number of dashes increases with radius (more segments on bigger rings)
+    let segments = rIndex * 10; // simple linear rule
+    let angleStep = TWO_PI / segments;
+
+    // Nested loop: iterate over each segment on this ring
+    for (let j = 0; j < segments; j++) {
+      // The current dash angle, animated by phase
+      let a = j * angleStep + phase * ringDir;
+
+      push();
+      rotate(a);
+      translate(radius, 0);
+
+      // Alternate dash angle locally to amplify the wobble
+      // (like tiny chevrons pointing different ways)
+      if (j % 2 == 0) {
+        rotate(PI/4);
+      } else {
+        rotate(-PI/4);
+      }
+
+      // Dash color
+      if (j % 2 == 0) {
+        fill(0,255,80);
+      } else {
+        fill(10, 160, 200);
+      }
+
+      // Draw the dash (a small rounded rectangle)
+      rect(0, 0, dashW, dashH);
+
+      pop();
+    }
+  }
+
+  // text for navigation
+  resetMatrix();
+  fill(0);
+  noStroke();
+  textAlign(CENTER);
+  textSize(12);
+  text("Click/hold to reverse & speed up", width/2, height -30 );
+}
+</script>
+
+<p>
+    <a href="index.html"> back to homepage</a>
+  </p>
+<footer class="footer">
+      <div class="container grid grid--footer">
+        <div class="logo-col">
+          <a href="index.html">
+            <img class="logo" src="images/logo.png" alt="logo" />
+          </a>
+
+          <ul class="social-links">
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-instagram"></ion-icon
+              ></a>
+            </li>
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-facebook"></ion-icon
+              ></a>
+            </li>
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-twitter"></ion-icon
+              ></a>
+            </li>
+          </ul>
+
+          <p class="copyright">
+            © 2025 My Portfolio. All rights reserved.
+          </p>
+        </div>
+
+        <div class="address-col">
+          <p><strong>Contact</strong></p>
+          <p>New York, NY</p>
+          <p>
+            Email: <a href="mailto:info@myportfolio.com">info@myportfolio.com</a
+            ><br />
+            Tel: <a href="tel:+16464446464">(646) 444-6464</a>
+          </p>
+        </div>
+
+        <div class="open-hours">
+          <p><strong>Availability</strong></p>
+          <ul>
+            <li>Mon–Fri: 9:00am–6:00pm</li>
+            <li>Sat: By appointment</li>
+            <li>Sun: Closed</li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+</body>
+</html>

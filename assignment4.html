@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="Style.css">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.js"></script>
+  <title>Assignment 4</title>
+</head>
+<script
+      type="module"
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"
+    ></script>
+</head>
+
+<header class="header">
+      <a href="index.html">
+        <img class="logo" src="images/logo.png" alt="portfolio logo" />
+      </a>
+
+      <nav class="main-nav">
+        <ul class="main-nav-list">
+          <li><a class="main-nav-link" href="index.html">Home</a></li>
+          <li><a class="main-nav-link" href="portfolio.html">Portfolio</a></li>
+          <li><a class="main-nav-link" href="about.html">About</a></li>
+          <li><a class="main-nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+<body>
+  <h1>Exquisite Corpse</h1>
+  <div id="sketch-container"></div>
+
+
+
+    <script>
+    
+
+let x = 200;
+let ink;
+let heartCol;
+let cheeksNormal;
+let cheeksStrong;
+let skirtCol;
+let legCol;
+let bootCol;
+
+function setup() {
+  let canvas = createCanvas(600, 600);
+  canvas.parent('sketch-container')
+  rectMode(CENTER);
+  noStroke();
+
+
+  // define colors
+  ink = color(0);
+  heartCol = color(255, 180, 200);
+  cheeksNormal = color(255, 170, 180);
+  cheeksStrong = color(245, 110, 130);
+  skirtCol = color(180, 170, 255);
+  legCol = color(240);
+  bootCol = color(30);
+}
+
+function draw() {
+  background(230);
+
+  // call functions in order (head, neck, torso, skirt, legs)
+  drawHead(x, 120, cheeksNormal, cheeksStrong);
+  drawNeck(x, 175);
+  drawHeartTorso(x, 260);
+  drawSkirt(x, 335);
+  drawLegsBoots(x, 415);
+}
+
+//  HEAD 
+function drawHead(x, y, cheeksN, cheeksS) {
+  // head shape
+  fill(255);
+  stroke(ink);
+  strokeWeight(5);
+  ellipse(x, y, 160, 120);
+  noStroke();
+
+  // ears
+  fill(ink);
+  ellipse(x - 55, y - 45, 50, 50);
+  ellipse(x + 55, y - 45, 50, 50);
+
+  // eye patches
+  ellipse(x - 30, y, 40, 60);
+  ellipse(x + 30, y, 40, 60);
+
+  // eyes
+  fill(255);
+  ellipse(x - 30, y - 10, 15, 20);
+  ellipse(x + 30, y - 10, 15, 20);
+  fill(ink);
+  ellipse(x - 30, y - 10, 6, 6);
+  ellipse(x + 30, y - 10, 6, 6);
+
+  // cheeks (if/else changes color)
+  if (mouseIsPressed) {
+    fill(cheeksS); // darker pink if mouse pressed
+  } else {
+    fill(cheeksN); // lighter pink if not pressed
+  }
+  ellipse(x - 60, y + 15, 28, 20);
+  ellipse(x + 60, y + 15, 28, 20);
+
+  // nose
+  fill(ink);
+  triangle(x, y + 10, x - 5, y + 20, x + 5, y + 20);
+}
+
+// NECK 
+function drawNeck(x, y) {
+  fill(ink);
+  rectMode(CENTER);
+  rect(x, y+33, 32, 60,); // small rectangle as neck
+}
+
+// TORSO (HEART) 
+function drawHeartTorso(x, y) {
+  fill(heartCol);
+  noStroke();
+
+  // heart made from two circles + triangle
+  ellipse(x - 35, y - 20, 100, 100);
+  ellipse(x + 35, y - 20, 100, 100);
+  triangle(x - 75, y - 5, x + 84, y - 10, x, y + 105);
+
+  // eyes on heart
+  fill(255);
+  ellipse(x - 30, y - 10, 25, 25);
+  ellipse(x + 30, y - 10, 25, 25);
+  fill(ink);
+  ellipse(x - 30, y - 10, 10, 10);
+  ellipse(x + 30, y - 10, 10, 10);
+
+  // teeth
+  fill(ink);
+  rectMode(CENTER);
+  rect(x, y + 30, 40, 15);
+  fill(255);
+  rect(x - 10, y + 30, 8, 12);
+  rect(x, y + 30, 8, 12);
+  rect(x + 10, y + 30, 8, 12);
+
+  // arms
+  
+  drawArm(x - 64, y + 20);
+  drawArm(x + 64, y + 20);
+}
+
+// ARM 
+function drawArm(x, y) {
+  fill(heartCol);
+  rectMode(CENTER);
+  rect(x, y + 40, 25, 70, 10); // arm
+  ellipse(x, y + 80, 40, 30);  // hand
+  ellipse(x - 20, y + 75, 12, 12); // pinky bump
+}
+
+//SKIRT 
+function drawSkirt(x, y) {
+  fill(skirtCol);
+  stroke(140, 120, 220);
+  strokeWeight(2);
+  // trapezoid shape
+  quad(x - 40, y - 25, x + 40, y - 25, x + 70, y + 40, x - 70, y + 40);
+  noStroke();
+}
+
+//  LEGS + BOOTS
+function drawLegsBoots(x, y) {
+  fill(legCol);
+  rect(x - 28, y+5, 24, 90, 8); // left leg
+  rect(x + 28, y+5, 24, 90, 8); // right leg
+
+  // cuffs
+  fill(255);
+  rect(x - 28, y + 40, 34, 16, 6);
+  rect(x + 28, y + 40, 34, 16, 6);
+
+  // boots
+  fill(bootCol);
+  rect(x - 28, y + 68, 38, 28, 8);
+  rect(x + 28, y + 68, 38, 28, 8);
+  ellipse(x - 52, y + 70, 24, 18);
+  ellipse(x + 52, y + 70, 24, 18);
+}
+
+</script>
+
+<p>
+    <a href="index.html"> back to homepage</a>
+  </p>
+
+
+<footer class="footer">
+      <div class="container grid grid--footer">
+        <div class="logo-col">
+          <a href="index.html">
+            <img class="logo" src="images/logo.png" alt="logo" />
+          </a>
+
+          <ul class="social-links">
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-instagram"></ion-icon
+              ></a>
+            </li>
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-facebook"></ion-icon
+              ></a>
+            </li>
+            <li>
+              <a class="footer-link" href="#"
+                ><ion-icon name="logo-twitter"></ion-icon
+              ></a>
+            </li>
+          </ul>
+
+          <p class="copyright">
+            © 2025 My Portfolio. All rights reserved.
+          </p>
+        </div>
+
+        <div class="address-col">
+          <p><strong>Contact</strong></p>
+          <p>New York, NY</p>
+          <p>
+            Email: <a href="mailto:info@myportfolio.com">info@myportfolio.com</a
+            ><br />
+            Tel: <a href="tel:+16464446464">(646) 444-6464</a>
+          </p>
+        </div>
+
+        <div class="open-hours">
+          <p><strong>Availability</strong></p>
+          <ul>
+            <li>Mon–Fri: 9:00am–6:00pm</li>
+            <li>Sat: By appointment</li>
+            <li>Sun: Closed</li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+</body>
+</html>
